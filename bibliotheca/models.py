@@ -2,6 +2,7 @@ from django.db import models
 from django.db import models
 import datetime
 # Create your models here.
+
 class Readers(models.Model):
     name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
@@ -12,11 +13,12 @@ class Readers(models.Model):
     password = models.CharField(max_length=255)
     is_blocked = models.BooleanField()
 
-class Borrowings(models.Model):
-    reader_id = models.ForeignKey(Readers)
-    book_id = models.ForeignKey(Books)
-    date_since = models.DateTimeField('Data wypożyczenia')
-    date_to = models.DateTimeField('Data zwrotu')
+class Publishers(models.Model):
+    name = models.CharField(max_length=255)
+
+class Categories(models.Model):
+    name = models.CharField(max_length=255)
+    top_category_id = models.IntegerField()
 
 class Books(models.Model):
     publisher_id = models.ForeignKey(Publishers)
@@ -28,20 +30,19 @@ class Books(models.Model):
     number_of_pages = models.IntegerField()
     description = models.TextField()
 
-class Books_Authors(models.Model):
-    author_id = models.ForeignKey(Authors)
+class Borrowings(models.Model):
+    reader_id = models.ForeignKey(Readers)
     book_id = models.ForeignKey(Books)
+    date_since = models.DateTimeField('Data wypożyczenia')
+    date_to = models.DateTimeField('Data zwrotu')
 
 class Authors(models.Model):
     name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
 
-class Publishers(models.Model):
-    name = models.CharField(max_length=255)
-
-class Categories(models.Model):
-    name = models.CharField(max_length=255)
-    top_category_id = models.IntegerField()
+class Books_Authors(models.Model):
+    author_id = models.ForeignKey(Authors)
+    book_id = models.ForeignKey(Books)
 
 class Books_Categories(models.Model):
     category_id = models.ForeignKey(Categories)
