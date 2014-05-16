@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {%  if latest_news %}
+        {%  for news in latest_news %}
+    <div class="panel panel-default">
+		<div class="panel-heading">
+			<h1 class="panel-title" style="display: inline;">{{ news.title }}</h1>
+			<ul class="list-inline pull-right">
+				<li><a href="#"><span class="glyphicon glyphicon-pencil"></span></a></li>
+				<li><a href="#"><span class="glyphicon glyphicon-trash"></span></a></li>
+			</ul>
+		</div>
+		<div class="panel-body">
+			{{ news.text_body }}
+		</div>
+		<div class="panel-footer">
+			Opublikowano: {{ news.creation_date|date:"d-m-Y H:i" }} {% if news.modification_date %}, ostatnia modyfikacja: {{ news.modification_date|date:"d-m-Y H:i" }} {% endif %}
+		</div>
+	</div>
+        {% endfor %}
+    {% else %}
+        <h2>Brak wiadomości.</h2>
+    {% endif %}
+
+{% endblock %}

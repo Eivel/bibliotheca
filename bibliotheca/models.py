@@ -11,14 +11,15 @@ class Readers(models.Model):
     email = models.EmailField()
     login = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
-    is_blocked = models.BooleanField()
+    is_blocked = models.BooleanField(default=False)
 
 class Publishers(models.Model):
     name = models.CharField(max_length=255)
 
 class Categories(models.Model):
     name = models.CharField(max_length=255)
-    top_category_id = models.IntegerField()
+    top_category_id = models.IntegerField(null=True, blank=True)
+    is_main_category = models.BooleanField(default=True)
 
 class Books(models.Model):
     publisher_id = models.ForeignKey(Publishers)
@@ -46,7 +47,7 @@ class Books_Authors(models.Model):
 
 class Books_Categories(models.Model):
     category_id = models.ForeignKey(Categories)
-    boook_id = models.ForeignKey(Books)
+    book_id = models.ForeignKey(Books)
 
 class Warehouse(models.Model):
     book_id = models.ForeignKey(Books)
@@ -57,7 +58,7 @@ class Warehouse(models.Model):
 class News(models.Model):
     title = models.CharField(max_length=255)
     creation_date = models.DateTimeField('Data utworzenia')
-    modification_date = models.DateTimeField('Data modyfikacji')
+    modification_date = models.DateTimeField('Data modyfikacji', null=True, blank=True)
     text_body = models.TextField()
 
 class Reservations(models.Model):

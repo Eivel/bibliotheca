@@ -1,13 +1,13 @@
 from django.conf.urls import patterns, include, url
-import bibliotheca.views
+from bibliotheca import views
 from django.contrib import admin
+from django.views.generic import RedirectView
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'mia.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-    url(r'^test$', bibliotheca.views.MyView.as_view(),
-    name='test-view',),
+    url(r'^$', views.NewsView.as_view(), name='index'),
+    url(r'^news$', views.NewsView.as_view(), name='news'),
+    url(r'^contact$', views.ContactView.as_view(), name='contact'),
     url(r'^admin/', include(admin.site.urls)),
 )
