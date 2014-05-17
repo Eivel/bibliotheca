@@ -36,10 +36,6 @@ class ReadersForm(ModelForm):
         fields = ['address_street', 'address_strno', 'address_aptno', 'address_postcode', 'address_city',
                   'phone_number']
 
-    def save(self, commit=True):
-
-        return
-
 
 class UserCreateForm(UserCreationForm):
     username = forms.CharField(

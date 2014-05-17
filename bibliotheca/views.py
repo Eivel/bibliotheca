@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import View
-from django.contrib.auth.forms import UserCreationForm
+from django.http import HttpResponseRedirect
 from bibliotheca.models import News
 from bibliotheca.forms import ReadersForm, UserCreateForm
 
@@ -22,23 +22,13 @@ class ContactView(View):
 class UserRegister(View):
     template = 'registration/register.html'
     def get(self, request):
-        if request.method == "POST":
-            form_creation = UserCreateForm(request.POST)
-            form_readers = ReadersForm(request.POST)
 
-            if form_creation.is_valid() and form_readers.is_valid():
-                msg = 'ok'
-            else:
-                msg = 'nie ok'
-        else:
-            form_creation = UserCreateForm()
-            form_readers = ReadersForm()
-            msg = 'brak'
+        form_creation = UserCreateForm()
+        form_readers = ReadersForm()
 
         context = {
             'form_creation' : form_creation,
             'form_readers' : form_readers,
-            'msg' : msg
         }
 
         return render(request, self.template, context)
@@ -48,16 +38,16 @@ class UserRegister(View):
         form_readers = ReadersForm(request.POST)
 
         if form_creation.is_valid() and form_readers.is_valid():
-            msg = 'ok'
-        else:
-            msg = 'nie ok'
+            user = form_creation.save()
+            profile = form_readers.save(commit=False)
+            profile.user = user
+            profile.save()
+            return render(request, 'registration/registerSuccess.html')
 
         context = {
             'form_creation' : form_creation,
             'form_readers' : form_readers,
-            'msg' : msg
         }
 
         return render(request, self.template, context)
-
 
