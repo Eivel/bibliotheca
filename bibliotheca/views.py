@@ -1,20 +1,10 @@
 from django.shortcuts import render
-from django.shortcuts import redirect
-from django.http import HttpResponse
-from django.core.urlresolvers import reverse
 from django.views.generic import View
+from django.http import HttpResponseRedirect
 from bibliotheca.models import News
-from django.views.generic import ListView, CreateView
-from django.views.generic import UpdateView
-from django.template import RequestContext, loader
+from bibliotheca.forms import ReadersForm, UserCreateForm
+
 # Create your views here.
-
-class MyView(View):
-    template = 'myview.html'
-    def get(self, request, *args, **kwargs):
-        #return HttpResponse(self.template.render())
-        return render(request,self.template)
-
 class NewsView(View):
     template = 'news.html'
     def get(self, request, *args, **kwargs):
@@ -29,5 +19,35 @@ class ContactView(View):
     def get(self, request, *args, **kwargs):
         return render(request,self.template)
 
-def index(request):
-    return redirect(NewsView.as_view())
+class UserRegister(View):
+    template = 'registration/register.html'
+    def get(self, request):
+
+        form_creation = UserCreateForm()
+        form_readers = ReadersForm()
+
+        context = {
+            'form_creation' : form_creation,
+            'form_readers' : form_readers,
+        }
+
+        return render(request, self.template, context)
+
+    def post(self, request):
+        form_creation = UserCreateForm(request.POST)
+        form_readers = ReadersForm(request.POST)
+
+        if form_creation.is_valid() and form_readers.is_valid():
+            user = form_creation.save()
+            profile = form_readers.save(commit=False)
+            profile.user = user
+            profile.save()
+            return render(request, 'registration/registerSuccess.html')
+
+        context = {
+            'form_creation' : form_creation,
+            'form_readers' : form_readers,
+        }
+
+        return render(request, self.template, context)
+

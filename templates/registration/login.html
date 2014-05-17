@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if form.errors %}
+        <div class="alert alert-danger">Nazwa użytkownika lub hasło jest niepoprawne. Spróbuj ponownie.</div>
+    {% endif %}
+    <div class="panel panel-default">
+
+        <div class="panel-body">
+            <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="InputLogin">{{ form.username.label_tag }}</label>
+                    <input type="text" class="form-control" id="id_username" name="username"
+                           placeholder="Wpisz nazwę użytkownika">
+
+                </div>
+                <div class="form-group">
+                    <label for="InputPassword">{{ form.password.label_tag }}</label>
+                    <input type="password" class="form-control" id="id_password" name="password"
+                           placeholder="Wpisz hasło">
+                </div>
+                <button type="submit" class="btn btn-default">Zaloguj</button>
+                <input type="hidden" name="next" value="{{ next }}"/>
+            </form>
+
+        </div>
+
+    </div>
+
+{% endblock %}

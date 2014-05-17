@@ -9,5 +9,8 @@ urlpatterns = patterns('',
     url(r'^$', views.NewsView.as_view(), name='index'),
     url(r'^news$', views.NewsView.as_view(), name='news'),
     url(r'^contact$', views.ContactView.as_view(), name='contact'),
+    url(r'^login/$', 'django.contrib.auth.views.login'),
+    url(r'^logout/$', 'django.contrib.auth.views.logout'),
+    url(r'^register/$', views.UserRegister.as_view(), name='register'),
     url(r'^admin/', include(admin.site.urls)),
 )
