@@ -1,20 +1,10 @@
 from django.shortcuts import render
-from django.shortcuts import redirect
-from django.http import HttpResponse
-from django.core.urlresolvers import reverse
 from django.views.generic import View
+from django.contrib.auth.forms import UserCreationForm
 from bibliotheca.models import News
-from django.views.generic import ListView, CreateView
-from django.views.generic import UpdateView
-from django.template import RequestContext, loader
+from bibliotheca.forms import ReadersForm, UserCreateForm
+
 # Create your views here.
-
-class MyView(View):
-    template = 'myview.html'
-    def get(self, request, *args, **kwargs):
-        #return HttpResponse(self.template.render())
-        return render(request,self.template)
-
 class NewsView(View):
     template = 'news.html'
     def get(self, request, *args, **kwargs):
@@ -29,5 +19,45 @@ class ContactView(View):
     def get(self, request, *args, **kwargs):
         return render(request,self.template)
 
-def index(request):
-    return redirect(NewsView.as_view())
+class UserRegister(View):
+    template = 'registration/register.html'
+    def get(self, request):
+        if request.method == "POST":
+            form_creation = UserCreateForm(request.POST)
+            form_readers = ReadersForm(request.POST)
+
+            if form_creation.is_valid() and form_readers.is_valid():
+                msg = 'ok'
+            else:
+                msg = 'nie ok'
+        else:
+            form_creation = UserCreateForm()
+            form_readers = ReadersForm()
+            msg = 'brak'
+
+        context = {
+            'form_creation' : form_creation,
+            'form_readers' : form_readers,
+            'msg' : msg
+        }
+
+        return render(request, self.template, context)
+
+    def post(self, request):
+        form_creation = UserCreateForm(request.POST)
+        form_readers = ReadersForm(request.POST)
+
+        if form_creation.is_valid() and form_readers.is_valid():
+            msg = 'ok'
+        else:
+            msg = 'nie ok'
+
+        context = {
+            'form_creation' : form_creation,
+            'form_readers' : form_readers,
+            'msg' : msg
+        }
+
+        return render(request, self.template, context)
+
+

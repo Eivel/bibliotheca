@@ -86,6 +86,8 @@ PROJECT_PATH = os.path.realpath(os.path.dirname(__file__)) #testowe
 
 STATIC_URL = '/static/'
 
+LOGIN_REDIRECT_URL = '/'
+
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".

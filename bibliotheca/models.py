@@ -1,16 +1,15 @@
 from django.db import models
-from django.db import models
-import datetime
+from django.contrib.auth.models import User
 # Create your models here.
 
 class Readers(models.Model):
-    name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    address = models.CharField(max_length=255)
+    user = models.OneToOneField(User)
+    address_street = models.CharField(max_length=255)
+    address_strno = models.IntegerField()
+    address_aptno = models.IntegerField(null=True, blank=True)
+    address_postcode = models.CharField(max_length=7)
+    address_city = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=12)
-    email = models.EmailField()
-    login = models.CharField(max_length=255)
-    password = models.CharField(max_length=255)
     is_blocked = models.BooleanField(default=False)
 
 class Publishers(models.Model):
@@ -65,4 +64,3 @@ class Reservations(models.Model):
     reader_id = models.ForeignKey(Readers)
     book_id = models.ForeignKey(Books)
     reservation_date = models.DateTimeField('Data rezerwacji')
-
