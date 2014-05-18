@@ -29,12 +29,12 @@
                 {% if book.original_title %}<p>Tytuł oryginalny: {{ book.original_title }}</p>{% endif %}
                 <p>
                     {% for author in book.authors.all %}
-                        <a href="author/{{ author.id }}">{{ author.name }} {{ author.last_name }}</a>
+                        <a href="/author/{{ author.id }}">{{ author.name }} {{ author.last_name }}</a>
                         {% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 </p>
 
-                <p><a href="publisher/{{ book.publisher.id }}">{{ book.publisher }}</a>, {{ book.published_date }}
+                <p><a href="/publisher/{{ book.publisher.id }}">{{ book.publisher }}</a>, {{ book.published_date }}
                 </p>
 
                 {% if book.number_of_pages %}<p>Liczba stron: {{ book.number_of_pages }}</p>{% endif %}
