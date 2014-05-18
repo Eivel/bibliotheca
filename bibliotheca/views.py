@@ -109,11 +109,11 @@ class BookView(View):
     template = 'book.html'
     def get(self, request, bid, *args, **kwargs):
         book = Books.objects.get(id=bid)
-        obj = book.category_id
-        breadcrumbs = []
 
+        breadcrumbs = []
         breadcrumbs.append(book)
 
+        obj = book.category
         while obj != None:
             breadcrumbs.append(obj)
             obj = obj.top_category
@@ -122,5 +122,31 @@ class BookView(View):
         context = {
             'book': book,
             'breadcrumbs': breadcrumbs
+        }
+        return render(request,self.template, context)
+
+class AuthorView(View):
+    template = 'author.html'
+    def get(self, request, aid, *args, **kwargs):
+
+        author = Authors.objects.get(id=aid)
+        books = Books.objects.filter(authors=author)
+
+        context = {
+            'books': books,
+            'author': author
+        }
+        return render(request,self.template, context)
+
+class PublisherView(View):
+    template = 'publisher.html'
+    def get(self, request, pid, *args, **kwargs):
+
+        pub = Publishers.objects.get(id=pid)
+        books = Books.objects.filter(publisher=pub)
+
+        context = {
+            'books': books,
+            'publisher': pub
         }
         return render(request,self.template, context)

@@ -1,19 +1,14 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% block content %}
-    {% if breadcrumbs %}
-        <ol class="breadcrumb">
-            {% for crumb in breadcrumbs %}
-                {% if crumb.id == cid %}
-                    <li class="active">{{ crumb.name }}</li>
-                {% else %}
-                    <li><a href="/category/{{ crumb.id }}">{{ crumb.name }}</a></li>
-                {% endif %}
-            {% endfor %}
+    {% if author %}
+         <ol class="breadcrumb">
+         <li><a href="#">Wyszukiwanie</a></li>
+         <li class="active">{{ author.name }} {{ author.last_name }}</li>
         </ol>
+
     {% endif %}
     {% if books %}
-
         {% for book in books %}
             <div class="panel panel-default">
                 <div class="panel-body">
@@ -38,23 +33,4 @@
     {% else %}
         <h2>Brak książek w tej kategorii.</h2>
     {% endif %}
-{% endblock %}
-
-{% block right_menu %}
-    <ul class="list-group panel-default">
-        <li class="panel-heading list-group-item">
-            <p class="panel-title">
-                <a href="/category/{{ current.id }}">{{ current.name }}</a>
-            </p>
-        </li>
-        {% for subcat in children %}
-            <li class="list-group-item">
-                {% if cid == subcat.id %}
-                    {{ subcat.name }}
-                {% else %}
-                    <a href="/category/{{ subcat.id }}">{{ subcat.name }}</a>
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
 {% endblock %}
