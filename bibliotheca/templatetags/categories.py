@@ -3,7 +3,7 @@ from bibliotheca.models import Categories
 
 register = template.Library()
 
-@register.inclusion_tag('categories.html')
+@register.inclusion_tag('cat_menu.html')
 def get_main_categories():
     cats = Categories.objects.filter(is_main_category = True)
     return {'cats' : cats}
