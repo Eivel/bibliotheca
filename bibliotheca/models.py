@@ -44,10 +44,6 @@ class Books_Authors(models.Model):
     author_id = models.ForeignKey(Authors)
     book_id = models.ForeignKey(Books)
 
-class Books_Categories(models.Model):
-    category_id = models.ForeignKey(Categories)
-    book_id = models.ForeignKey(Books)
-
 class Warehouse(models.Model):
     book_id = models.ForeignKey(Books)
     books_quantity = models.IntegerField()
