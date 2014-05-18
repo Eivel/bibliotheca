@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from django.views.generic import View
+from django.views.generic import View, ListView
 from django.http import HttpResponseRedirect
-from bibliotheca.models import News
+from bibliotheca.models import *
 from bibliotheca.forms import ReadersForm, UserCreateForm
 
 # Create your views here.
@@ -51,3 +51,24 @@ class UserRegister(View):
 
         return render(request, self.template, context)
 
+class CategoryView(ListView):
+    template = 'categories.html'
+    def get(self, request, *args, **kwargs):
+        category = Categories.objects.all()
+        authors = Authors.objects.all()
+        books = Books.objects.all()
+        books_authors = Books_Authors.objects.all()
+        multiple_authors = {}
+        for book in books:
+            multiple_authors[book.title] = []
+            for b_a in books_authors:
+                if b_a.book_id.pk == book.pk:
+                    multiple_authors[book.title].append(b_a.author_id)
+
+
+        context = {
+            'books' : books,
+            'authors' : multiple_authors
+        }
+
+        return render(request,self.template, context)

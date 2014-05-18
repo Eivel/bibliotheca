@@ -12,5 +12,6 @@ urlpatterns = patterns('',
     url(r'^login/$', 'django.contrib.auth.views.login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout'),
     url(r'^register/$', views.UserRegister.as_view(), name='register'),
+    url(r'^category/[0-9]+', views.CategoryView.as_view(), name='category'),
     url(r'^admin/', include(admin.site.urls)),
 )

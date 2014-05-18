@@ -15,10 +15,16 @@ class Readers(models.Model):
 class Publishers(models.Model):
     name = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.name
+
 class Categories(models.Model):
     name = models.CharField(max_length=255)
     top_category_id = models.IntegerField(null=True, blank=True)
     is_main_category = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
 
 class Books(models.Model):
     publisher_id = models.ForeignKey(Publishers)
@@ -30,6 +36,9 @@ class Books(models.Model):
     number_of_pages = models.IntegerField()
     description = models.TextField()
 
+    def __str__(self):
+        return self.title
+
 class Borrowings(models.Model):
     reader_id = models.ForeignKey(Readers)
     book_id = models.ForeignKey(Books)
@@ -40,9 +49,15 @@ class Authors(models.Model):
     name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.name + ' ' + self.last_name
+
 class Books_Authors(models.Model):
     author_id = models.ForeignKey(Authors)
     book_id = models.ForeignKey(Books)
+
+    def __str__(self):
+        return self.author_id.name + ' ' + self.author_id.last_name + ' - ' + self.book_id.title
 
 class Warehouse(models.Model):
     book_id = models.ForeignKey(Books)
