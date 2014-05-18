@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+    {% if breadcrumbs %}
+        <ol class="breadcrumb">
+            {% for crumb in breadcrumbs %}
+                {% if crumb.title %}
+                    <li class="active">{{ crumb.title }}</li>
+                {% else %}
+                    <li><a href="/category/{{ crumb.id }}">{{ crumb.name }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    {% endif %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <p class="panel-title">{{ book.title }}</p>
+        </div>
+        <div class="panel-body">
+            <div class="col-md-4">
+                <a href="#" class="thumbnail">
+                    <img src="{% static 'images/PlaceholderBook.png' %}" alt="...">
+                </a>
+                {% if not user.is_anonymous %}
+                <button class="btn btn-primary" type="button">Zarezerwuj</button>
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <h2>{{ book.title }}</h2>
+
+                {% if book.original_title %}<p>Tytuł oryginalny: {{ book.original_title }}</p>{% endif %}
+                <p>
+                    {% for author in book.authors.all %}
+                        <a href="/author/{{ author.id }}">{{ author.name }} {{ author.last_name }}</a>
+                        {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+
+                <p><a href="/publisher/{{ book.publisher_id.id }}">{{ book.publisher_id }}</a>, {{ book.published_date }}
+                </p>
+
+                {% if book.number_of_pages %}<p>Liczba stron: {{ book.number_of_pages }}</p>{% endif %}
+
+                {% if book.ISBN %}<p>ISBN: {{ book.ISBN }}</p>{% endif %}
+
+                {% if book.description %}<p>{{ book.description }}</p>{% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -5,5 +5,6 @@ register = template.Library()
 
 @register.inclusion_tag('cat_menu.html')
 def get_main_categories():
-    cats = Categories.objects.filter(is_main_category = True)
+    main = Categories.objects.get(name='Książki')
+    cats = Categories.objects.filter(top_category_id=main.id)
     return {'cats' : cats}

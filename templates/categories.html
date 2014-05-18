@@ -1,32 +1,63 @@
 {% extends "base.html" %}
-
+{% load staticfiles %}
 {% block content %}
+    {% if breadcrumbs %}
+        <ol class="breadcrumb">
+            {% for crumb in breadcrumbs %}
 
-    {% load staticfiles %}
-        {%  for book in books %}
+                {% if crumb.id == cid %}
+
+                    <li class="active">{{ crumb.name }}</li>
+                {% else %}
+                    <li><a href="/category/{{ crumb.id }}">{{ crumb.name }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    {% endif %}
+    {% if books %}
+
+        {% for book in books %}
             <div class="panel panel-default">
-                <div class="panel panel-default">
-							<div class="panel-body">
-								<div class="col-md-2">
-									<a href="#" class="thumbnail">
-										<img src="{% static 'images/PlaceholderBook.png' %}" alt="...">
-									</a>
-								</div>
-								<div class="col-md-10">
-									<h4><a href="#">{{ book.title }}</a></h4>
-                                    {% for key, value_list  in authors.items %}
-                                        {% if key == book.title %}
-                                            {% for value in value_list %}
-									            <p><a href="#">{{ value }}</a></p>
-                                            {% endfor %}
-                                        {% endif %}
-                                    {% endfor %}
-									<p><a href="#">{{ book.publisher_id }}</a>, 2007</p>
-								</div>
-							</div>
-						</div>
-
+                <div class="panel-body">
+                    <div class="col-md-2">
+                        <a href="#" class="thumbnail">
+                            <img src="{% static 'images/PlaceholderBook.png' %}" alt="...">
+                        </a>
+                    </div>
+                    <div class="col-md-10">
+                        <h4><a href="/book/{{ book.id }}">{{ book.title }}</a></h4>
+                        {% for author in book.authors.all %}
+                            <a href="/author/{{ author.id }}">{{ author.name }} {{ author.last_name }}</a>
+                            {% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                        <p>
+                            <a href="/publisher/{{ book.publisher.id }}">{{ book.publisher }}</a>, {{ book.published_date }}
+                        </p>
+                    </div>
+                </div>
             </div>
         {% endfor %}
 
+    {% else %}
+        <h2>Brak książek w tej kategorii.</h2>
+    {% endif %}
+{% endblock %}
+
+{% block right_menu %}
+    <ul class="list-group panel-default">
+        <li class="panel-heading list-group-item">
+            <p class="panel-title">
+                <a href="/category/{{ current.id }}">{{ current.name }}</a>
+            </p>
+        </li>
+        {% for subcat in children %}
+            <li class="list-group-item">
+                {% if cid == subcat.id %}
+                    {{ subcat.name }}
+                {% else %}
+                    <a href="/category/{{ subcat.id }}">{{ subcat.name }}</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}

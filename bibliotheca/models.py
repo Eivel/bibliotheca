@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import pdb
 # Create your models here.
 
 class Readers(models.Model):
@@ -20,30 +21,19 @@ class Publishers(models.Model):
 
 class Categories(models.Model):
     name = models.CharField(max_length=255)
-    top_category_id = models.IntegerField(null=True, blank=True)
-    is_main_category = models.BooleanField(default=True)
+    top_category = models.ForeignKey('self', null=True, blank=True)
+    #is_main_category = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
 
-class Books(models.Model):
-    publisher_id = models.ForeignKey(Publishers)
-    category_id = models.ForeignKey(Categories)
-    title = models.CharField(max_length=255)
-    original_title = models.CharField(max_length=255)
-    ISBN = models.CharField(max_length=255)
-    published_date = models.DateTimeField('Data wydania')
-    number_of_pages = models.IntegerField()
-    description = models.TextField()
-
-    def __str__(self):
-        return self.title
-
-class Borrowings(models.Model):
-    reader_id = models.ForeignKey(Readers)
-    book_id = models.ForeignKey(Books)
-    date_since = models.DateTimeField('Data wypożyczenia')
-    date_to = models.DateTimeField('Data zwrotu')
+    def get_all_children(self, include_self=True):
+        r = []
+        if include_self:
+            r.append(self)
+        for c in Categories.objects.filter(top_category=self):
+            r.append(c.get_all_children())
+        return r
 
 class Authors(models.Model):
     name = models.CharField(max_length=255)
@@ -52,15 +42,29 @@ class Authors(models.Model):
     def __str__(self):
         return self.name + ' ' + self.last_name
 
-class Books_Authors(models.Model):
-    author_id = models.ForeignKey(Authors)
-    book_id = models.ForeignKey(Books)
+class Books(models.Model):
+    publisher = models.ForeignKey(Publishers)
+    category = models.ForeignKey(Categories)
+    authors = models.ManyToManyField(Authors)
+    title = models.CharField(max_length=255)
+    original_title = models.CharField(max_length=255)
+    ISBN = models.CharField(max_length=255)
+    published_date = models.IntegerField('Rok wydania')
+    number_of_pages = models.IntegerField()
+    description = models.TextField()
 
     def __str__(self):
-        return self.author_id.name + ' ' + self.author_id.last_name + ' - ' + self.book_id.title
+        return self.title
+
+class Borrowings(models.Model):
+    reader = models.ForeignKey(Readers)
+    book = models.ForeignKey(Books)
+    date_since = models.DateTimeField('Data wypożyczenia')
+    date_to = models.DateTimeField('Data zwrotu')
+
 
 class Warehouse(models.Model):
-    book_id = models.ForeignKey(Books)
+    book = models.ForeignKey(Books)
     books_quantity = models.IntegerField()
     books_available = models.IntegerField()
     books_reserved = models.IntegerField()
@@ -72,6 +76,6 @@ class News(models.Model):
     text_body = models.TextField()
 
 class Reservations(models.Model):
-    reader_id = models.ForeignKey(Readers)
-    book_id = models.ForeignKey(Books)
+    reader = models.ForeignKey(Readers)
+    book = models.ForeignKey(Books)
     reservation_date = models.DateTimeField('Data rezerwacji')

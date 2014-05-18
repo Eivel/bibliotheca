@@ -3,6 +3,8 @@ from django.views.generic import View, ListView
 from django.http import HttpResponseRedirect
 from bibliotheca.models import *
 from bibliotheca.forms import ReadersForm, UserCreateForm
+from django.db.models import Q
+import pdb;
 
 # Create your views here.
 class NewsView(View):
@@ -53,22 +55,72 @@ class UserRegister(View):
 
 class CategoryView(ListView):
     template = 'categories.html'
-    def get(self, request, *args, **kwargs):
-        category = Categories.objects.all()
-        authors = Authors.objects.all()
-        books = Books.objects.all()
-        books_authors = Books_Authors.objects.all()
-        multiple_authors = {}
-        for book in books:
-            multiple_authors[book.title] = []
-            for b_a in books_authors:
-                if b_a.book_id.pk == book.pk:
-                    multiple_authors[book.title].append(b_a.author_id)
 
+    def flatten(nested):
+        flat = list()
+        def flatten_in(nested, flat):
+            for i in nested:
+                flatten_in(i, flat) if isinstance(i, list) else flat.append(i)
+            return flat
+        flatten_in(nested, flat)
+        return flat
+
+    def get(self, request, cid, *args, **kwargs):
+        #books = Books.objects.filter(category_id=cid)
+
+        current = Categories.objects.get(id=cid)
+        related_cats = current.get_all_children()
+        relcats = CategoryView.flatten(related_cats)
+
+        queries = [Q(category=value) for value in relcats]
+
+        query = queries.pop()
+
+        for item in queries:
+            query |= item
+
+        books = Books.objects.filter(query)
+
+        obj = current
+        breadcrumbs = []
+        while obj != None:
+            breadcrumbs.append(obj)
+            obj = obj.top_category
+
+        breadcrumbs.reverse()
+
+        children = Categories.objects.filter(top_category=current)
+
+        if children.count() == 0:
+            current = current.top_category
+            children = Categories.objects.filter(top_category=current)
 
         context = {
             'books' : books,
-            'authors' : multiple_authors
+            'breadcrumbs' : breadcrumbs,
+            'current' : current,
+            'children' : children,
+            'cid' : int(cid)
         }
 
+        return render(request,self.template, context)
+
+class BookView(View):
+    template = 'book.html'
+    def get(self, request, bid, *args, **kwargs):
+        book = Books.objects.get(id=bid)
+        obj = book.category_id
+        breadcrumbs = []
+
+        breadcrumbs.append(book)
+
+        while obj != None:
+            breadcrumbs.append(obj)
+            obj = obj.top_category
+        breadcrumbs.reverse()
+
+        context = {
+            'book': book,
+            'breadcrumbs': breadcrumbs
+        }
         return render(request,self.template, context)
