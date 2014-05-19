@@ -4,6 +4,8 @@ from django.http import HttpResponseRedirect
 from bibliotheca.models import *
 from bibliotheca.forms import ReadersForm, UserCreateForm
 from django.db.models import Q
+from django.shortcuts import RequestContext
+import datetime
 import pdb;
 
 # Create your views here.
@@ -109,7 +111,11 @@ class BookView(View):
     template = 'book.html'
     def get(self, request, bid, *args, **kwargs):
         book = Books.objects.get(id=bid)
-
+        user = request.user
+        try:
+            reservations = Reservations.objects.get(book = bid, reader = user.readers)
+        except Reservations.DoesNotExist:
+            reservations = None
         breadcrumbs = []
         breadcrumbs.append(book)
 
@@ -121,9 +127,12 @@ class BookView(View):
 
         context = {
             'book': book,
-            'breadcrumbs': breadcrumbs
+            'breadcrumbs': breadcrumbs,
+            'reservations' : reservations
         }
         return render(request,self.template, context)
+
+
 
 class AuthorView(View):
     template = 'author.html'
@@ -150,3 +159,60 @@ class PublisherView(View):
             'publisher': pub
         }
         return render(request,self.template, context)
+
+class ReservationsView(View):
+    template = 'reservations.html'
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        try:
+            reservations = Reservations.objects.filter(reader = user.readers)
+        except Reservations.DoesNotExist:
+            reservations = None
+
+        context = {
+            'reservations' : reservations
+        }
+        return render(request,self.template, context)
+
+class ReservedView(View):
+    template = 'reserved.html'
+
+    def get(self, request, bid, *args, **kwargs):
+        try:
+            is_reserved = Reservations.objects.get(book = bid, reader = request.user.readers)
+        except Reservations.DoesNotExist:
+            is_reserved = None
+        if is_reserved == None:
+            reservation = Reservations()
+            reservation.book = Books.objects.get(id=bid)
+            reservation.reader = Readers.objects.get(user=request.user)
+            reservation.reservation_date = datetime.datetime.now()
+            reservation.save()
+
+            context = {}
+            return render(request,self.template, context)
+        else:
+            context = {
+                'reservation' : is_reserved
+            }
+            return render(request,self.template,context)
+
+class UnreservedView(View):
+    template = 'unreserved.html'
+
+    def get(self, request, bid, *args, **kwargs):
+        try:
+            is_reserved = Reservations.objects.get(book = bid, reader = request.user.readers)
+        except Reservations.DoesNotExist:
+            is_reserved = None
+        if is_reserved != None:
+            reservation = Reservations.objects.get(book = bid, reader = request.user.readers)
+            reservation.delete()
+            context = {}
+            return render(request,self.template, context)
+        else:
+            context = {
+                'reservation' : is_reserved
+            }
+            return render(request, self.template, context)

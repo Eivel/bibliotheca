@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+    {% if reservations %}
+        {% for reservation in reservations %}
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="col-md-2">
+                        <a href="#" class="thumbnail">
+                            <img src="{% static 'images/PlaceholderBook.png' %}" alt="...">
+                        </a>
+                        <a href="#" class="btn btn-primary" type="button">Anuluj rezerwację</a>
+                    </div>
+                    <div class="col-md-10">
+                        <h4><a href="/book/{{ reservation.book.id }}">{{ reservation.book.title }}</a></h4>
+                        {% for author in reservation.book.authors.all %}
+                            <a href="/author/{{ author.id }}">{{ author.name }} {{ author.last_name }}</a>{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                        <p>
+                            <a href="/publisher/{{ reservation.book.publisher.id }}">{{ reservation.book.publisher }}</a>, {{ reservation.book.published_date }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    {% else %}
+        <h2>Brak książek w tej kategorii.</h2>
+    {% endif %}
+{% endblock %}
+
+{% block right_menu %}
+    <ul class="list-group panel-default">
+        <li class="panel-heading list-group-item">
+            <p class="panel-title">
+                <a href="/category/{{ current.id }}">{{ current.name }}</a>
+            </p>
+        </li>
+        {% for subcat in children %}
+            <li class="list-group-item">
+                {% if cid == subcat.id %}
+                    {{ subcat.name }}
+                {% else %}
+                    <a href="/category/{{ subcat.id }}">{{ subcat.name }}</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

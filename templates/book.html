@@ -21,7 +21,11 @@
                 <a href="#" class="thumbnail">
                     <img src="{% static 'images/PlaceholderBook.png' %}" alt="...">
                 </a>
-                <button class="btn btn-primary" type="button">Zarezerwuj</button>
+                {% if reservations %}
+                <a href="/unreserved/{{ book.id }}" class="btn btn-primary" type="button">Anuluj rezerwację</a>
+                {% else %}
+                <a href="/reserved/{{ book.id }}" class="btn btn-primary" type="button">Zarezerwuj</a>
+                {% endif %}
             </div>
             <div class="col-md-8">
                 <h2>{{ book.title }}</h2>

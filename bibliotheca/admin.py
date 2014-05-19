@@ -17,9 +17,12 @@ class AuthorsAdmin(admin.ModelAdmin):
 class CategoriesAdmin(admin.ModelAdmin):
     fields = ['name', 'top_category']
 
+class ReservationsAdmin(admin.ModelAdmin):
+    fields = ['reader', 'book', 'reservation_date']
 
 admin.site.register(News, NewsAdmin)
 admin.site.register(Books,BooksAdmin)
 admin.site.register(Publishers,PublishersAdmin)
 admin.site.register(Authors,AuthorsAdmin)
 admin.site.register(Categories,CategoriesAdmin)
+admin.site.register(Reservations,ReservationsAdmin)

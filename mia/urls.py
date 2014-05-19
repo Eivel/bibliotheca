@@ -16,5 +16,8 @@ urlpatterns = patterns('',
     url(r'^book/(?P<bid>[0-9]+)/', views.BookView.as_view(), name='book'),
     url(r'^author/(?P<aid>[0-9]+)/', views.AuthorView.as_view(), name='author'),
     url(r'^publisher/(?P<pid>[0-9]+)/', views.PublisherView.as_view(), name='publisher'),
+    url(r'^reservations$', views.ReservationsView.as_view(), name='reservations'),
+    url(r'^reserved/(?P<bid>[0-9]+)/', views.ReservedView.as_view(), name='reserved'),
+    url(r'^unreserved/(?P<bid>[0-9]+)/', views.UnreservedView.as_view(), name='unreserved'),
     url(r'^admin/', include(admin.site.urls)),
 )

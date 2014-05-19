@@ -1,9 +1,8 @@
 from django.forms import ModelForm
-from bibliotheca.models import Readers
+from bibliotheca.models import Readers, Reservations
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-
 
 class ReadersForm(ModelForm):
     address_street = forms.CharField(

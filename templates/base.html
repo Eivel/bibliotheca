@@ -50,7 +50,8 @@
 				</form>
 
                 {% else %}
-                    <p class="navbar-right navbar-text">Witaj, {{ user.username }}! <a class="navbar-link" href="{% url 'django.contrib.auth.views.logout' %}">Wyloguj się</a></p>
+                    <p class="navbar-right navbar-text">Witaj, {{ user.username }}! <a class="navbar-link" href="{% url 'django.contrib.auth.views.logout' %}">Wyloguj się</a> <a class="navbar-link" href="/reservations" >Rezerwacje</a></p>
+
                 {% endif %}
 			</div>
             </div>
