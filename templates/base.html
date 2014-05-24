@@ -31,6 +31,8 @@
 				<ul class="nav navbar-nav">
 					<li><a href="/">Home</a></li>
 					<li><a href="#">Wyszukiwanie</a></li>
+                    <li><a href="/category/1">Katalog</a></li>
+                    <li><a href="/reservations">Rezerwacje</a></li>
 					<li><a href="/contact">Kontakt</a></li>
 				</ul>
 
@@ -50,7 +52,7 @@
 				</form>
 
                 {% else %}
-                    <p class="navbar-right navbar-text">Witaj, {{ user.username }}! <a class="navbar-link" href="{% url 'django.contrib.auth.views.logout' %}">Wyloguj się</a> <a class="navbar-link" href="/reservations" >Rezerwacje</a></p>
+                    <p class="navbar-right navbar-text">Witaj, {{ user.username }}! <a class="navbar-link" href="{% url 'django.contrib.auth.views.logout' %}">Wyloguj się</a> </p>
 
                 {% endif %}
 			</div>

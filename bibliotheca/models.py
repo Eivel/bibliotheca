@@ -5,6 +5,10 @@ import pdb
 # Create your models here.
 
 class Readers(models.Model):
+    class Meta:
+        verbose_name = 'Czytelnik'
+        verbose_name_plural = 'Czytelnicy'
+
     user = models.OneToOneField(User)
     address_street = models.CharField(max_length=255)
     address_strno = models.IntegerField()
@@ -18,14 +22,22 @@ class Readers(models.Model):
         return self.user.first_name + ' ' + self.user.last_name
 
 class Publishers(models.Model):
-    name = models.CharField(max_length=255)
+    class Meta:
+        verbose_name = 'Wydawca'
+        verbose_name_plural = 'Wydawcy'
+
+    name = models.CharField(max_length=255,verbose_name='Nazwa wydawnictwa')
 
     def __str__(self):
         return self.name
 
 class Categories(models.Model):
-    name = models.CharField(max_length=255)
-    top_category = models.ForeignKey('self', null=True, blank=True)
+    class Meta:
+        verbose_name = 'Kategoria'
+        verbose_name_plural = 'Kategorie'
+
+    name = models.CharField(max_length=255,verbose_name='Nazwa kategorii')
+    top_category = models.ForeignKey('self', null=True, blank=True,verbose_name='Kategoria nadrzędna')
     #is_main_category = models.BooleanField(default=True)
 
     def __str__(self):
@@ -40,27 +52,39 @@ class Categories(models.Model):
         return r
 
 class Authors(models.Model):
-    name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    class Meta:
+        verbose_name = 'Autor'
+        verbose_name_plural = 'Autorzy'
+
+    name = models.CharField(max_length=255,verbose_name='Imię autora')
+    last_name = models.CharField(max_length=255,verbose_name='Nazwisko autora')
 
     def __str__(self):
         return self.name + ' ' + self.last_name
 
 class Books(models.Model):
-    publisher = models.ForeignKey(Publishers)
-    category = models.ForeignKey(Categories)
-    authors = models.ManyToManyField(Authors)
-    title = models.CharField(max_length=255)
-    original_title = models.CharField(max_length=255)
+    class Meta:
+        verbose_name = 'Książka'
+        verbose_name_plural = 'Książki'
+
+    publisher = models.ForeignKey(Publishers,verbose_name='Wydawca')
+    category = models.ForeignKey(Categories,verbose_name='Kategoria')
+    authors = models.ManyToManyField(Authors,verbose_name='Autorzy')
+    title = models.CharField(max_length=255,verbose_name='Tytuł')
+    original_title = models.CharField(max_length=255,verbose_name='Tytuł oryginalny',null=True, blank=True)
     ISBN = models.CharField(max_length=255)
     published_date = models.IntegerField('Rok wydania')
-    number_of_pages = models.IntegerField()
-    description = models.TextField()
+    number_of_pages = models.IntegerField('Liczba stron', null=True, blank=True)
+    description = models.TextField('Opis', null=True, blank=True)
 
     def __str__(self):
         return self.title
 
 class Borrowings(models.Model):
+    class Meta:
+        verbose_name = 'Wypożyczenie'
+        verbose_name_plural = 'Wypożyczenia'
+
     reader = models.ForeignKey(Readers)
     book = models.ForeignKey(Books)
     date_since = models.DateTimeField('Data wypożyczenia')
@@ -68,6 +92,10 @@ class Borrowings(models.Model):
 
 
 class Warehouse(models.Model):
+    class Meta:
+        verbose_name = 'Magazyn'
+        verbose_name_plural = 'Magazyny'
+
     book = models.ForeignKey(Books)
     books_quantity = models.IntegerField()
     books_available = models.IntegerField()
@@ -77,15 +105,23 @@ class Warehouse(models.Model):
         return self.book.title
 
 class News(models.Model):
-    title = models.CharField(max_length=255)
+    class Meta:
+        verbose_name = 'Wiadomość'
+        verbose_name_plural = 'Wiadomości'
+
+    title = models.CharField(max_length=255,verbose_name='Tytuł wiadomości')
     creation_date = models.DateTimeField('Data utworzenia')
     modification_date = models.DateTimeField('Data modyfikacji', null=True, blank=True)
-    text_body = models.TextField()
+    text_body = models.TextField(verbose_name='Treść wiadomości')
 
     def __str__(self):
         return self.title
 
 class Reservations(models.Model):
+    class Meta:
+        verbose_name = 'Rezerwacja'
+        verbose_name_plural = 'Rezerwacje'
+
     reader = models.ForeignKey(Readers)
     book = models.ForeignKey(Books)
     reservation_date = models.DateTimeField('Data rezerwacji')

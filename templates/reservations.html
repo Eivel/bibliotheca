@@ -25,25 +25,6 @@
         {% endfor %}
 
     {% else %}
-        <h2>Brak książek w tej kategorii.</h2>
+        <h2>Brak rezerwacji.</h2>
     {% endif %}
-{% endblock %}
-
-{% block right_menu %}
-    <ul class="list-group panel-default">
-        <li class="panel-heading list-group-item">
-            <p class="panel-title">
-                <a href="/category/{{ current.id }}">{{ current.name }}</a>
-            </p>
-        </li>
-        {% for subcat in children %}
-            <li class="list-group-item">
-                {% if cid == subcat.id %}
-                    {{ subcat.name }}
-                {% else %}
-                    <a href="/category/{{ subcat.id }}">{{ subcat.name }}</a>
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
 {% endblock %}

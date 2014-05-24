@@ -108,12 +108,6 @@ class CategoryView(ListView):
 
 class BookView(View):
     template = 'book.html'
-    def get2(self, request, bid, *args, **kwargs):
-        reservation = Reservations()
-        reservation.book = Books.objects.get(id=bid)
-        reservation.reader = Readers.objects.get(user=request.user)
-        reservation.reservation_date = datetime.datetime.now()
-        reservation.save()
 
     def get(self, request, bid, *args, **kwargs):
         book = Books.objects.get(id=bid)
@@ -181,7 +175,7 @@ class ReservationsView(View):
         context = {
             'reservations' : reservations
         }
-        return render(request,self.template, context)
+        return render(request, self.template, context)
 
 class ReservedView(View):
     template = 'reserved.html'
