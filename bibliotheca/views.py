@@ -112,6 +112,7 @@ class BookView(View):
     def get(self, request, bid, *args, **kwargs):
         book = Books.objects.get(id=bid)
         user = request.user
+        warehouse = Warehouse.objects.get(book=bid)
         try:
             reservations = Reservations.objects.get(book = bid, reader = user.readers)
         except Reservations.DoesNotExist:
@@ -128,7 +129,8 @@ class BookView(View):
         context = {
             'book': book,
             'breadcrumbs': breadcrumbs,
-            'reservations' : reservations
+            'reservations' : reservations,
+            'warehouse' : warehouse
         }
         return render(request,self.template, context)
 
@@ -179,6 +181,10 @@ class ReservedView(View):
     template = 'reserved.html'
 
     def get(self, request, bid, *args, **kwargs):
+        warehouse = Warehouse.objects.get(book=bid)
+        warehouse.books_reserved += 1
+        warehouse.books_available -= 1
+        warehouse.save()
         try:
             is_reserved = Reservations.objects.get(book = bid, reader = request.user.readers)
         except Reservations.DoesNotExist:
@@ -194,7 +200,8 @@ class ReservedView(View):
             return render(request,self.template, context)
         else:
             context = {
-                'reservation' : is_reserved
+                'reservation' : is_reserved,
+                'warehouse' : warehouse
             }
             return render(request,self.template,context)
 
@@ -202,6 +209,10 @@ class UnreservedView(View):
     template = 'unreserved.html'
 
     def get(self, request, bid, *args, **kwargs):
+        warehouse = Warehouse.objects.get(book=bid)
+        warehouse.books_reserved -= 1
+        warehouse.books_available += 1
+        warehouse.save()
         try:
             is_reserved = Reservations.objects.get(book = bid, reader = request.user.readers)
         except Reservations.DoesNotExist:

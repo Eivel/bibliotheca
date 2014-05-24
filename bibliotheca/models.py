@@ -73,6 +73,9 @@ class Warehouse(models.Model):
     books_available = models.IntegerField()
     books_reserved = models.IntegerField()
 
+    def __str__(self):
+        return self.book.title
+
 class News(models.Model):
     title = models.CharField(max_length=255)
     creation_date = models.DateTimeField('Data utworzenia')
