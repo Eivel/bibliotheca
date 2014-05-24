@@ -58,6 +58,7 @@ class UserRegister(View):
 class CategoryView(ListView):
     template = 'categories.html'
 
+
     def flatten(nested):
         flat = list()
         def flatten_in(nested, flat):
@@ -68,8 +69,6 @@ class CategoryView(ListView):
         return flat
 
     def get(self, request, cid, *args, **kwargs):
-        #books = Books.objects.filter(category_id=cid)
-
         current = Categories.objects.get(id=cid)
         related_cats = current.get_all_children()
         relcats = CategoryView.flatten(related_cats)
@@ -109,6 +108,13 @@ class CategoryView(ListView):
 
 class BookView(View):
     template = 'book.html'
+    def get2(self, request, bid, *args, **kwargs):
+        reservation = Reservations()
+        reservation.book = Books.objects.get(id=bid)
+        reservation.reader = Readers.objects.get(user=request.user)
+        reservation.reservation_date = datetime.datetime.now()
+        reservation.save()
+
     def get(self, request, bid, *args, **kwargs):
         book = Books.objects.get(id=bid)
         user = request.user
