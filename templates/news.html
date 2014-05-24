@@ -8,8 +8,8 @@
 			<h1 class="panel-title" style="display: inline;">{{ news.title }}</h1>
             {% if user.is_superuser %}
 			<ul class="list-inline pull-right">
-				<li><a href="news/edit/{{ news.id }}"><span class="glyphicon glyphicon-pencil"></span></a></li>
-				<li><a href="news/delete/{{ news.id }}"><span class="glyphicon glyphicon-trash"></span></a></li>
+				<li><a href="/admin/bibliotheca/news/{{ news.id }}"><span class="glyphicon glyphicon-pencil"></span></a></li>
+				<li><a href="/admin/bibliotheca/news/{{ news.id }}/delete"><span class="glyphicon glyphicon-trash"></span></a></li>
 			</ul>
             {% endif %}
 		</div>
