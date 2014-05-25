@@ -4,6 +4,8 @@ from bibliotheca.models import Categories
 
 register = template.Library()
 
-@register.filter
-def get_category_id(url):
-    return url.rsplit('/',1)
+def categories_list(format_string):
+    cats = Categories.objects.all()
+    return cats
+
+register.simple_tag(categories_list)

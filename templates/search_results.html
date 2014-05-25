@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% block content %}
-    {% if reservations %}
-        {% for reservation in reservations %}
+    {% if results %}
+        {% for book in results %}
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="col-md-2">
@@ -11,12 +11,12 @@
                         </a>
                     </div>
                     <div class="col-md-10">
-                        <h4><a href="/book/{{ reservation.book.id }}">{{ reservation.book.title }}</a></h4>
-                        {% for author in reservation.book.authors.all %}
+                        <h4><a href="/book/{{ book.book.id }}">{{ book.book.title }}</a></h4>
+                        {% for author in book.book.authors.all %}
                             <a href="/author/{{ author.id }}">{{ author.name }} {{ author.last_name }}</a>{% if not forloop.last %}, {% endif %}
                         {% endfor %}
                         <p>
-                            <a href="/publisher/{{ reservation.book.publisher.id }}">{{ reservation.book.publisher }}</a>, {{ reservation.book.published_date }}
+                            <a href="/publisher/{{ book.book.publisher.id }}">{{ book.book.publisher }}</a>, {{ book.book.published_date }}
                         </p>
                     </div>
                 </div>
@@ -24,6 +24,6 @@
         {% endfor %}
 
     {% else %}
-        <h2>Brak rezerwacji.</h2>
+        <h2>Brak wyników.</h2>
     {% endif %}
 {% endblock %}

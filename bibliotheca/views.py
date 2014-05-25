@@ -6,7 +6,8 @@ from bibliotheca.forms import ReadersForm, UserCreateForm
 from django.db.models import Q
 from django.shortcuts import RequestContext
 import datetime
-import pdb;
+import pdb
+
 
 # Create your views here.
 class NewsView(View):
@@ -134,8 +135,6 @@ class BookView(View):
         }
         return render(request,self.template, context)
 
-
-
 class AuthorView(View):
     template = 'author.html'
     def get(self, request, aid, *args, **kwargs):
@@ -227,3 +226,12 @@ class UnreservedView(View):
                 'reservation' : is_reserved
             }
             return render(request, self.template, context)
+
+class SearchResultsView(View):
+    template = 'search_results.html'
+    def get(self, request, q, *args, **kwargs):
+        text = q
+        context = {
+
+            }
+        return render(request, self.template, context)

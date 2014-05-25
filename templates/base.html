@@ -63,21 +63,26 @@
 				<div class="col-md-9">
 					<form class="form-horizontal">
 						<div class="controls form-inline">
-							<input type="text" class="form-control input-sm" style="width: 250px" placeholder="Fraza wyszukiwania">
+                            <form action="/searchresults" method="get">
+                                <input type="text" class="form-control input-sm" name="q" style="width: 250px" placeholder="Fraza wyszukiwania">
 
-							<select class="form-control input-sm form-inline" style="width: 150px">
-								<option>Kryterium</option>
-								<option>Nic</option>
-							</select>
+                                <select name=k class="form-control input-sm form-inline" style="width: 150px">
+                                    <option>Kryterium</option>
+                                    <option value="title">Tytuł</option>
+                                    <option value="author">Autor</option>
+                                </select>
 
-                            {% get_cats %}
+                                {% get_cats %}
 
-							<select class="form-control input-sm form-inline" style="width: 150px">
-								<option>Sortowanie</option>
-								<option>Nic</option>
-							</select>
+                                <select name=s class="form-control input-sm form-inline" style="width: 150px">
+                                    <option>Sortowanie</option>
+                                    <option value="dsc">Rosnące</option>
+                                    <option value="asc">Malejące</option>
+                                </select>
 
-							<button class="btn btn-sm" type="submit">Szukaj</button>
+                                <button class="btn btn-sm" type="submit">Szukaj</button>
+
+                            </form>
 						</div>
 					</form>
 				</div>
