@@ -19,6 +19,6 @@ urlpatterns = patterns('',
     url(r'^reservations$', views.ReservationsView.as_view(), name='reservations'),
     url(r'^reserved/(?P<bid>[0-9]+)/', views.ReservedView.as_view(), name='reserved'),
     url(r'^unreserved/(?P<bid>[0-9]+)/', views.UnreservedView.as_view(), name='unreserved'),
-    url(r'^searchresults/(?P<criteria>[0-9]+)/', views.SearchResultsView.as_view(), name='search_results'), #wersja robocza
+    url(r'^searchresults', views.SearchResultsView.as_view(), name='search_results'), #wersja robocza
     url(r'^admin/', include(admin.site.urls)),
 )

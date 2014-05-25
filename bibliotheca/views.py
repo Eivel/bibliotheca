@@ -10,6 +10,15 @@ import pdb
 
 
 # Create your views here.
+def flatten(nested):
+    flat = list()
+    def flatten_in(nested, flat):
+       for i in nested:
+           flatten_in(i, flat) if isinstance(i, list) else flat.append(i)
+       return flat
+    flatten_in(nested, flat)
+    return flat
+
 class NewsView(View):
     template = 'news.html'
     def get(self, request, *args, **kwargs):
@@ -59,20 +68,10 @@ class UserRegister(View):
 class CategoryView(ListView):
     template = 'categories.html'
 
-
-    def flatten(nested):
-        flat = list()
-        def flatten_in(nested, flat):
-            for i in nested:
-                flatten_in(i, flat) if isinstance(i, list) else flat.append(i)
-            return flat
-        flatten_in(nested, flat)
-        return flat
-
     def get(self, request, cid, *args, **kwargs):
         current = Categories.objects.get(id=cid)
         related_cats = current.get_all_children()
-        relcats = CategoryView.flatten(related_cats)
+        relcats = flatten(related_cats)
 
         queries = [Q(category=value) for value in relcats]
 
@@ -229,9 +228,43 @@ class UnreservedView(View):
 
 class SearchResultsView(View):
     template = 'search_results.html'
-    def get(self, request, q, *args, **kwargs):
-        text = q
-        context = {
+    def get(self, request, *args, **kwargs):
+        if request.GET['q']:
+            k = int(request.GET['k'])
+            s = int(request.GET['s'])
+            cid = int(request.GET['cat'])
 
+            current = Categories.objects.get(id=cid)
+            related_cats = current.get_all_children()
+            relcats = flatten(related_cats)
+
+            queries = [Q(category=value) for value in relcats]
+
+            query = queries.pop()
+
+            for item in queries:
+                query |= item
+
+            if k == 1:
+                books = Books.objects.filter(query, title__contains=request.GET['q'])
+            elif k == 2:
+                a = Authors.objects.filter(last_name__contains=request.GET['q'])
+                books = Books.objects.filter(query, authors=a)
+            else:
+                books = None
+
+            if s == 1:
+                books = books.order_by('title')
+            elif s == 2:
+                books = books.order_by('-title')
+        formdata = {
+            'q' : request.GET['q'],
+            'k' : k,
+            's' : s,
+            'cid' : cid
+        }
+        context = {
+                'books' : books,
+                'formdata' : formdata
             }
         return render(request, self.template, context)

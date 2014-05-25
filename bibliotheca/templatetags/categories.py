@@ -9,7 +9,7 @@ def get_main_categories():
     cats = Categories.objects.filter(top_category_id=main.id)
     return {'cats' : cats}
 
-@register.inclusion_tag('search_categories_combobox.html')
-def get_cats():
+@register.inclusion_tag('search_categories_combobox.html', takes_context=True)
+def get_cats(context):
     cats = Categories.objects.all()
-    return {'categories' : cats}
+    return {'categories' : cats, 'cid' : context['formdata']['cid']}

@@ -1,5 +1,5 @@
 <select class="form-control input-sm form-inline" style="width: 150px" name="cat">
     {% for c in categories %}
-        <option value="{{ c.id }}">{{ c.name }}</option>
+        <option value="{{ c.id }}"{% if c.id == cid %} selected{% endif %}>{{ c.name }}</option>
     {% endfor %}
 </select>

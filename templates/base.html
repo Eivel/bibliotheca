@@ -61,30 +61,30 @@
 <div class="container searchbar">
 			<div class="row">
 				<div class="col-md-9">
-					<form class="form-horizontal">
+                    {% block search_form %}
+					<form class="form-horizontal" action="/searchresults" method="get">
 						<div class="controls form-inline">
-                            <form action="/searchresults" method="get">
+
                                 <input type="text" class="form-control input-sm" name="q" style="width: 250px" placeholder="Fraza wyszukiwania">
 
-                                <select name=k class="form-control input-sm form-inline" style="width: 150px">
-                                    <option>Kryterium</option>
-                                    <option value="title">Tytuł</option>
-                                    <option value="author">Autor</option>
+                                <select name="k" class="form-control input-sm form-inline" style="width: 150px">
+                                    <option value="1">Tytuł</option>
+                                    <option value="2">Autor</option>
                                 </select>
 
                                 {% get_cats %}
 
-                                <select name=s class="form-control input-sm form-inline" style="width: 150px">
-                                    <option>Sortowanie</option>
-                                    <option value="dsc">Rosnące</option>
-                                    <option value="asc">Malejące</option>
+                                <select name="s" class="form-control input-sm form-inline" style="width: 150px">
+                                    <option value="1">Rosnąco</option>
+                                    <option value="2">Malejąco</option>
                                 </select>
 
                                 <button class="btn btn-sm" type="submit">Szukaj</button>
 
-                            </form>
+
 						</div>
 					</form>
+                    {% endblock %}
 				</div>
 			</div>
 		</div>
