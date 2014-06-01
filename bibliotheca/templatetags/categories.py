@@ -12,4 +12,8 @@ def get_main_categories():
 @register.inclusion_tag('search_categories_combobox.html', takes_context=True)
 def get_cats(context):
     cats = Categories.objects.all()
-    return {'categories' : cats, 'cid' : context['formdata']['cid']}
+    if 'formdata' in context:
+        cid = context['formdata']['cid']
+    else:
+        cid = 0
+    return {'categories' : cats, 'cid' : cid}

@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% load staticfiles categories %}
 {% block content %}
+     <h3>Wyszukiwanie: {{ formdata.q }}</h3>
     {% if books %}
+
         {% for book in books %}
             <div class="panel panel-default">
                 <div class="panel-body">

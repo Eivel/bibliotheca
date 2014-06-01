@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from django.views.generic import View, ListView
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from bibliotheca.models import *
 from bibliotheca.forms import ReadersForm, UserCreateForm
 from django.db.models import Q
 from django.shortcuts import RequestContext
 import datetime
-import pdb
+import math
 
 
 # Create your views here.
@@ -68,7 +69,9 @@ class UserRegister(View):
 class CategoryView(ListView):
     template = 'categories.html'
 
-    def get(self, request, cid, *args, **kwargs):
+    def get(self, request, cid, page = 1, *args, **kwargs):
+        page = (int)(page)
+        books_per_page = 10
         current = Categories.objects.get(id=cid)
         related_cats = current.get_all_children()
         relcats = flatten(related_cats)
@@ -81,6 +84,10 @@ class CategoryView(ListView):
             query |= item
 
         books = Books.objects.filter(query)
+
+        maxpages = math.ceil(books.count() / books_per_page)
+        if page <= maxpages:
+            books = books[(page - 1) * books_per_page: (page - 1) + books_per_page]
 
         obj = current
         breadcrumbs = []
@@ -101,7 +108,9 @@ class CategoryView(ListView):
             'breadcrumbs' : breadcrumbs,
             'current' : current,
             'children' : children,
-            'cid' : int(cid)
+            'cid' : int(cid),
+            'maxpages': maxpages,
+            'page': page,
         }
 
         return render(request,self.template, context)
@@ -111,12 +120,17 @@ class BookView(View):
 
     def get(self, request, bid, *args, **kwargs):
         book = Books.objects.get(id=bid)
-        user = request.user
+
         warehouse = Warehouse.objects.get(book=bid)
-        try:
-            reservations = Reservations.objects.get(book = bid, reader = user.readers)
-        except Reservations.DoesNotExist:
-            reservations = None
+
+        reservations = None
+        if request.user.is_authenticated():
+            user = request.user
+            try:
+                reservations = Reservations.objects.get(book = bid, reader = user.readers)
+            except Reservations.DoesNotExist:
+                reservations = None
+
         breadcrumbs = []
         breadcrumbs.append(book)
 
@@ -160,6 +174,7 @@ class PublisherView(View):
         }
         return render(request,self.template, context)
 
+
 class ReservationsView(View):
     template = 'reservations.html'
 
@@ -174,6 +189,7 @@ class ReservationsView(View):
             'reservations' : reservations
         }
         return render(request, self.template, context)
+
 
 class ReservedView(View):
     template = 'reserved.html'
