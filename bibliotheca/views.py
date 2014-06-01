@@ -9,7 +9,6 @@ from django.shortcuts import RequestContext
 import datetime
 import math
 
-
 # Create your views here.
 def flatten(nested):
     flat = list()
