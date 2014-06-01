@@ -8,6 +8,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', views.NewsView.as_view(), name='index'),
+    url(r'', include('password_reset.urls')),
     url(r'^news$', views.NewsView.as_view(), name='news'),
     url(r'^contact$', views.ContactView.as_view(), name='contact'),
     url(r'^login/$', 'django.contrib.auth.views.login'),
