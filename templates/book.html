@@ -22,12 +22,13 @@
                     <img src="{% static 'images/PlaceholderBook.png' %}" alt="...">
                 </a>
                 {% if reservations %}
-                <a href="/unreserved/{{ book.id }}" class="btn btn-primary" type="button">Anuluj rezerwację</a>
+                    <a href="/unreserved/{{ book.id }}" class="btn btn-primary" type="button">Anuluj rezerwację</a>
                 {% else %}
                     {% if warehouse.books_available > 0 %}
                         <a href="/reserved/{{ book.id }}" class="btn btn-primary" type="button">Zarezerwuj</a>
                     {% else %}
-                        <a href="#'{{ book.id }}" class="btn btn-primary disabled" type="button">Brak książek na magazynie</a>
+                        <a href="#'{{ book.id }}" class="btn btn-primary disabled" type="button">Brak książek na
+                            magazynie</a>
                     {% endif %}
                 {% endif %}
             </div>

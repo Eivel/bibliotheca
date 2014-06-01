@@ -14,11 +14,17 @@ urlpatterns = patterns('',
     url(r'^login/$', 'django.contrib.auth.views.login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout'),
     url(r'^register/$', views.UserRegister.as_view(), name='register'),
+    url(r'^book/(?P<bid>[0-9]+)/$', views.BookView.as_view(), name='book'),
+
     url(r'^category/(?P<cid>[0-9]+)/$', views.CategoryView.as_view(), name='category'),
     url(r'^category/(?P<cid>[0-9]+)/(?P<page>[0-9]+)', views.CategoryView.as_view(), name='category_page'),
-    url(r'^book/(?P<bid>[0-9]+)/$', views.BookView.as_view(), name='book'),
+
     url(r'^author/(?P<aid>[0-9]+)/$', views.AuthorView.as_view(), name='author'),
+    url(r'^author/(?P<aid>[0-9]+)/(?P<page>[0-9]+)', views.AuthorView.as_view(), name='author_page'),
+
     url(r'^publisher/(?P<pid>[0-9]+)/$', views.PublisherView.as_view(), name='publisher'),
+    url(r'^publisher/(?P<pid>[0-9]+)/(?P<page>[0-9]+)', views.PublisherView.as_view(), name='publisher_page'),
+
     url(r'^reservations$', login_required(views.ReservationsView.as_view(), login_url='/login/'), name='reservations'),
     url(r'^reserved/(?P<bid>[0-9]+)/$', login_required(views.ReservedView.as_view(), login_url='/login/'), name='reserved'),
     url(r'^unreserved/(?P<bid>[0-9]+)/$', login_required(views.UnreservedView.as_view(), login_url='/login/'), name='unreserved'),

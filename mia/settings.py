@@ -107,6 +107,8 @@ TEMPLATE_DIRS = (
 
 MEDIA_ROOT = PROJECT_PATH + '/media/'
 
+BOOKS_PER_PAGE = 10
+
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587

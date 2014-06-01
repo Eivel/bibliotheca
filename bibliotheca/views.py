@@ -7,6 +7,7 @@ from bibliotheca.forms import ReadersForm, UserCreateForm
 from django.db.models import Q
 from django.shortcuts import RequestContext
 import datetime
+from django.conf import settings
 import math
 
 # Create your views here.
@@ -69,8 +70,6 @@ class CategoryView(ListView):
     template = 'categories.html'
 
     def get(self, request, cid, page = 1, *args, **kwargs):
-        page = (int)(page)
-        books_per_page = 10
         current = Categories.objects.get(id=cid)
         related_cats = current.get_all_children()
         relcats = flatten(related_cats)
@@ -84,9 +83,10 @@ class CategoryView(ListView):
 
         books = Books.objects.filter(query)
 
-        maxpages = math.ceil(books.count() / books_per_page)
+        page = (int)(page)
+        maxpages = math.ceil(books.count() / settings.BOOKS_PER_PAGE)
         if page <= maxpages:
-            books = books[(page - 1) * books_per_page: (page - 1) + books_per_page]
+            books = books[(page - 1) * settings.BOOKS_PER_PAGE: (page - 1) + settings.BOOKS_PER_PAGE]
 
         obj = current
         breadcrumbs = []
@@ -149,27 +149,41 @@ class BookView(View):
 
 class AuthorView(View):
     template = 'author.html'
-    def get(self, request, aid, *args, **kwargs):
+    def get(self, request, aid, page = 1, *args, **kwargs):
 
         author = Authors.objects.get(id=aid)
         books = Books.objects.filter(authors=author)
 
+        page = (int)(page)
+        maxpages = math.ceil(books.count() / settings.BOOKS_PER_PAGE)
+        if page <= maxpages:
+            books = books[(page - 1) * settings.BOOKS_PER_PAGE: (page - 1) + settings.BOOKS_PER_PAGE]
+
         context = {
             'books': books,
-            'author': author
+            'author': author,
+            'maxpages': maxpages,
+            'page': page,
         }
         return render(request,self.template, context)
 
 class PublisherView(View):
     template = 'publisher.html'
-    def get(self, request, pid, *args, **kwargs):
+    def get(self, request, pid, page = 1, *args, **kwargs):
 
         pub = Publishers.objects.get(id=pid)
         books = Books.objects.filter(publisher=pub)
 
+        page = (int)(page)
+        maxpages = math.ceil(books.count() / settings.BOOKS_PER_PAGE)
+        if page <= maxpages:
+            books = books[(page - 1) * settings.BOOKS_PER_PAGE: (page - 1) + settings.BOOKS_PER_PAGE]
+
         context = {
             'books': books,
-            'publisher': pub
+            'publisher': pub,
+            'maxpages': maxpages,
+            'page': page,
         }
         return render(request,self.template, context)
 

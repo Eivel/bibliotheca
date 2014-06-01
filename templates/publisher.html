@@ -2,34 +2,14 @@
 {% load staticfiles %}
 {% block content %}
     {% if publisher %}
-         <ol class="breadcrumb">
-         <li><a href="#">Wyszukiwanie</a></li>
-         <li class="active">{{ publisher.name }}</li>
+        <ol class="breadcrumb">
+            <li><a href="#">Wyszukiwanie</a></li>
+            <li class="active">{{ publisher.name }}</li>
         </ol>
 
     {% endif %}
     {% if books %}
-        {% for book in books %}
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="col-md-2">
-                        <a href="#" class="thumbnail">
-                            <img src="{% static 'images/PlaceholderBook.png' %}" alt="...">
-                        </a>
-                    </div>
-                    <div class="col-md-10">
-                        <h4><a href="/book/{{ book.id }}">{{ book.title }}</a></h4>
-                        {% for author in book.authors.all %}
-                            <a href="/author/{{ author.id }}">{{ author.name }} {{ author.last_name }}</a>{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
-                        <p>
-                            <a href="/publisher/{{ book.publisher.id }}">{{ book.publisher }}</a>, {{ book.published_date }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-
+        {% include 'book_short.html' %}
     {% else %}
         <h2>Brak książek z wybranego wydawnictwa.</h2>
     {% endif %}

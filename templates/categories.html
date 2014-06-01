@@ -14,45 +14,9 @@
     {% endif %}
     {% if books %}
 
-        {% for book in books %}
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="col-md-2">
-                        <a href="#" class="thumbnail">
-                            <img src="{% static 'images/PlaceholderBook.png' %}" alt="...">
-                        </a>
-                    </div>
-                    <div class="col-md-10">
-                        <h4><a href="/book/{{ book.id }}">{{ book.title }}</a></h4>
-                    {% if book.category.id != cid %}
-                    <p>Kategoria: <a href="/category/{{ book.category.id }}">{{ book.category.name }}</a></p>
-                    {% endif %}
-                        {% for author in book.authors.all %}
-                            <a href="/author/{{ author.id }}">{{ author.name }} {{ author.last_name }}</a>
-                            {% if not forloop.last %}, {% endif %}
-                        {% endfor %}
-                        <p>
-                            <a href="/publisher/{{ book.publisher.id }}">{{ book.publisher }}</a>, {{ book.published_date }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-
-        {% if maxpages > 1 %}
+        {% include 'book_short.html' %}
 
 
-        <div class="row">
-            <ul class="pagination">
-                <li class="disabled"><a href="#">&laquo;</a></li>
-                {% for i in maxpages|get_range %}
-                <li{% if i == page %} class="active"{% endif %}><a href="/category/{{ cid }}/{{ i }}">{{ i }}</a></li>
-                {% endfor %}
-                <li class="disabled"><a href="#">&raquo;</a></li>
-            </ul>
-
-        </div>
-        {% endif %}
 
     {% else %}
         <h2>Brak książek w tej kategorii.</h2>

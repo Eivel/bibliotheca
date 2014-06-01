@@ -1,29 +1,13 @@
 {% extends "base.html" %}
 {% load staticfiles categories %}
 {% block content %}
-     <h3>Wyszukiwanie: {{ formdata.q }}</h3>
+    <ol class="breadcrumb">
+        <li><a href="#">Wyszukiwanie</a></li>
+        <li class="active">{{ formdata.q }}</li>
+    </ol>
     {% if books %}
 
-        {% for book in books %}
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="col-md-2">
-                        <a href="#" class="thumbnail">
-                            <img src="{% static 'images/PlaceholderBook.png' %}" alt="...">
-                        </a>
-                    </div>
-                    <div class="col-md-10">
-                        <h4><a href="/book/{{ book.id }}">{{ book.title }}</a></h4>
-                        {% for author in book.authors.all %}
-                            <a href="/author/{{ author.id }}">{{ author.name }} {{ author.last_name }}</a>{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
-                        <p>
-                            <a href="/publisher/{{ book.publisher.id }}">{{ book.publisher }}</a>, {{ book.published_date }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
+        {% include 'book_short.html' %}
 
     {% else %}
         <h2>Brak wyników.</h2>
@@ -31,28 +15,29 @@
 {% endblock %}
 
 {% if formdata %}
-{% block search_form %}
-					<form class="form-horizontal" action="/searchresults" method="get">
-						<div class="controls form-inline">
+    {% block search_form %}
+        <form class="form-horizontal" action="/searchresults" method="get">
+            <div class="controls form-inline">
 
-                                <input type="text" class="form-control input-sm" name="q" value="{{ formdata.q }}" style="width: 250px" placeholder="Fraza wyszukiwania">
+                <input type="text" class="form-control input-sm" name="q" value="{{ formdata.q }}" style="width: 250px"
+                       placeholder="Fraza wyszukiwania">
 
-                                <select name="k" class="form-control input-sm form-inline" style="width: 150px" autocomplete="off">
-                                    <option value="1"{% if formdata.k == 1 %} selected="selected"{% endif %}>Tytuł</option>
-                                    <option value="2"{% if formdata.k == 2 %} selected="selected"{% endif %}>Autor</option>
-                                </select>
+                <select name="k" class="form-control input-sm form-inline" style="width: 150px" autocomplete="off">
+                    <option value="1"{% if formdata.k == 1 %} selected="selected"{% endif %}>Tytuł</option>
+                    <option value="2"{% if formdata.k == 2 %} selected="selected"{% endif %}>Autor</option>
+                </select>
 
-                                {% get_cats %}
+                {% get_cats %}
 
-                                <select name="s" class="form-control input-sm form-inline" style="width: 150px" autocomplete="off">
-                                    <option value="1"{% if formdata.s == 1 %} selected="selected"{% endif %}>Rosnąco</option>
-                                    <option value="2"{% if formdata.s == 2 %} selected="selected"{% endif %}>Malejąco</option>
-                                </select>
+                <select name="s" class="form-control input-sm form-inline" style="width: 150px" autocomplete="off">
+                    <option value="1"{% if formdata.s == 1 %} selected="selected"{% endif %}>Rosnąco</option>
+                    <option value="2"{% if formdata.s == 2 %} selected="selected"{% endif %}>Malejąco</option>
+                </select>
 
-                                <button class="btn btn-sm" type="submit">Szukaj</button>
+                <button class="btn btn-sm" type="submit">Szukaj</button>
 
 
-						</div>
-					</form>
-                    {%  endblock %}
+            </div>
+        </form>
+    {% endblock %}
 {% endif %}
