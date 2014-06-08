@@ -27,14 +27,19 @@
                     <img src="{% static 'images/PlaceholderBook.png' %}" alt="...">
                 </a>
             {% endif %}
+
                 {% if reservations %}
                     <a href="/unreserved/{{ book.id }}" class="btn btn-primary" type="button">Anuluj rezerwację</a>
                 {% else %}
-                    {% if warehouse.books_available > 0 %}
-                        <a href="/reserved/{{ book.id }}" class="btn btn-primary" type="button">Zarezerwuj</a>
+                    {% if is_limit_reached %}
+                    <a href="#'{{ book.id }}" class="btn btn-primary disabled" type="button">Osiągnięto limit wypożyczeń</a>
                     {% else %}
-                        <a href="#'{{ book.id }}" class="btn btn-primary disabled" type="button">Brak książek na
-                            magazynie</a>
+                        {% if warehouse.books_available > 0 %}
+                            <a href="/reserved/{{ book.id }}" class="btn btn-primary" type="button">Zarezerwuj</a>
+                        {% else %}
+                            <a href="#'{{ book.id }}" class="btn btn-primary disabled" type="button">Brak książek na
+                                magazynie</a>
+                        {% endif %}
                     {% endif %}
                 {% endif %}
             </div>
