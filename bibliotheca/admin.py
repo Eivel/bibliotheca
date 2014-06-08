@@ -74,7 +74,7 @@ class BorrowingsAdmin(admin.ModelAdmin):
             warehouse.books_reserved -= 1
             warehouse.books_available += 1
             warehouse.save()
-            q.delete()
+        queryset.delete()
 
         self.message_user(request, "Zaznaczone wypożyczenia zostały usunięte, a stan książek uaktualniony")
     delete_borrowings.short_description = "Bezpiecznie usuń zaznaczone wypożyczenia"
