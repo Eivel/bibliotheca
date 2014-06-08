@@ -40,7 +40,8 @@ INSTALLED_APPS = (
     'bibliotheca',
     'south',
     'password_reset',
-    'PIL'
+    'PIL',
+    'django_cron'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -120,3 +121,8 @@ EMAIL_HOST_PASSWORD = 'bibliotheca'
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
+
+CRON_CLASSES = [
+    "bibliotheca.cron.remindofBorrowings",
+    # ...
+]

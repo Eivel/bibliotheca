@@ -132,3 +132,6 @@ class Reservations(models.Model):
     def __str__(self):
         return self.reader.user.first_name + ' ' + self.reader.user.last_name + ' : ' + self.book.title
 
+class MailRemainder(models.Model):
+    borrowing = models.ForeignKey(Borrowings)
+    sent_mails = models.IntegerField()
