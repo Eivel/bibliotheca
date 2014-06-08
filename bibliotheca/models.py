@@ -102,7 +102,7 @@ class Warehouse(models.Model):
     book = models.ForeignKey(Books)
     books_quantity = models.IntegerField()
     books_available = models.IntegerField()
-    books_reserved = models.IntegerField()
+    books_reserved = models.IntegerField(default=0)
 
     def __str__(self):
         return self.book.title
