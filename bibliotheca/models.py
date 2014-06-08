@@ -90,6 +90,8 @@ class Borrowings(models.Model):
     date_since = models.DateTimeField('Data wypożyczenia')
     date_to = models.DateTimeField('Data zwrotu')
 
+    def __str__(self):
+        return self.reader.user.first_name + ' ' + self.reader.user.last_name + ' : ' + self.book.title
 
 class Warehouse(models.Model):
     class Meta:

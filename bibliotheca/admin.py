@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as OriginalUserAdmin
 from bibliotheca.models import *
+import datetime
 # Register your models here.
 
 class NewsAdmin(admin.ModelAdmin):
@@ -30,6 +31,49 @@ class CategoriesAdmin(admin.ModelAdmin):
 
 class ReservationsAdmin(admin.ModelAdmin):
     fields = ['reader', 'book', 'reservation_date']
+    search_fields = ['reader__user__first_name', 'reader__user__last_name']
+    actions = ['borrow', 'delete']
+    def delete_reservations(self, request, queryset):
+        for q in queryset:
+            warehouse = Warehouse.objects.get(book=q.book.book_id)
+            warehouse.books_reserved -= 1
+            warehouse.books_available += 1
+            warehouse.save()
+        queryset.delete()
+        self.message_user(request, "Zaznaczone rezerwacje zostały usunięte, a stan książek uaktualniony")
+    def borrow(self, request, queryset):
+        for q in queryset:
+            borrowing = Borrowings()
+            borrowing.reader = q.reader
+            borrowing.book = q.book
+            borrowing.date_since = datetime.datetime.now()
+            duration = datetime.timedelta(days = 90)
+            borrowing.date_to = borrowing.date_since + duration
+            borrowing.save()
+        rows_updated = len(queryset)
+        queryset.delete()
+        if rows_updated == 1:
+            message_bit = "1 książka została"
+            self.message_user(request, "%s wypożyczona." % message_bit)
+        else:
+            message_bit = "%s książek zostało" % rows_updated
+            self.message_user(request, "%s wypożyczonych." % message_bit)
+    borrow.short_description = "Wypożycz zaznaczone książki"
+    delete_reservations.short_destription = "Usuń zaznaczone rezerwacje"
+
+class BorrowingsAdmin(admin.ModelAdmin):
+    fields = ['reader', 'book', 'date_since', 'date_to']
+    search_fields = ['reader__user__first_name', 'reader__user__last_name']
+    actions = ['borrow', 'delete']
+    def delete_borrowings(self, request, queryset):
+        for q in queryset:
+            warehouse = Warehouse.objects.get(book=q.book.book_id)
+            warehouse.books_reserved -= 1
+            warehouse.books_available += 1
+            warehouse.save()
+        queryset.delete()
+        self.message_user(request, "Zaznaczone wypożyczenia zostały usunięte, a stan książek uaktualniony")
+    delete_borrowings.short_destription = "Usuń zaznaczone wypożyczenia"
 
 class WarehouseAdmin(admin.ModelAdmin):
     fields = ['book', 'books_quantity', 'books_available', 'books_reserved']
@@ -77,3 +121,4 @@ admin.site.register(Authors,AuthorsAdmin)
 admin.site.register(Categories,CategoriesAdmin)
 admin.site.register(Reservations,ReservationsAdmin)
 admin.site.register(Warehouse, WarehouseAdmin)
+admin.site.register(Borrowings, BorrowingsAdmin)

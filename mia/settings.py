@@ -38,7 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'bibliotheca',
     'south',
-    'password_reset'
+    'password_reset',
+    'PIL'
 )
 
 MIDDLEWARE_CLASSES = (
