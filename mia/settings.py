@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import bibliotheca
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -85,7 +86,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 
-PROJECT_PATH = os.path.realpath(os.path.dirname(__file__)) #testowe
+PROJECT_PATH = os.path.realpath(os.path.dirname(bibliotheca.__file__)) #testowe
 
 STATIC_URL = '/static/'
 
@@ -106,7 +107,8 @@ TEMPLATE_DIRS = (
     "templates", # Change this to your own directory.
 )
 
-MEDIA_ROOT = PROJECT_PATH + '/media/'
+MEDIA_ROOT = PROJECT_PATH + '/static/images/'
+MEDIA_URL = '/static/images/'
 
 BOOKS_PER_PAGE = 10
 

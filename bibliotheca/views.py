@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from bibliotheca.models import *
 from bibliotheca.forms import ReadersForm, UserCreateForm
 from django.db.models import Q
-from django.shortcuts import RequestContext
+from django.shortcuts import RequestContext, redirect
 import datetime
 from django.conf import settings
 import math
@@ -19,6 +19,18 @@ def flatten(nested):
        return flat
     flatten_in(nested, flat)
     return flat
+
+def isUserBlocked(u):
+    if u and u.is_authenticated():
+        reader = Readers.objects.get(user=u)
+        if reader.is_blocked:
+            return True
+        return False
+
+class MsgBlockedView(View):
+    template = 'msgs/blocked.html'
+    def get(self, request, *args, **kwargs):
+        return render(request,self.template)
 
 class NewsView(View):
     template = 'news.html'
@@ -69,7 +81,7 @@ class UserRegister(View):
 class CategoryView(ListView):
     template = 'categories.html'
 
-    def get(self, request, cid, page = 1, *args, **kwargs):
+    def get(self, request, cid = 1, page = 1, *args, **kwargs):
         current = Categories.objects.get(id=cid)
         related_cats = current.get_all_children()
         relcats = flatten(related_cats)
@@ -208,6 +220,9 @@ class ReservedView(View):
     template = 'reserved.html'
 
     def get(self, request, bid, *args, **kwargs):
+        if isUserBlocked(request.user):
+            return redirect('msg_blocked')
+
         warehouse = Warehouse.objects.get(book=bid)
         warehouse.books_reserved += 1
         warehouse.books_available -= 1
@@ -236,6 +251,9 @@ class UnreservedView(View):
     template = 'unreserved.html'
 
     def get(self, request, bid, *args, **kwargs):
+        if isUserBlocked(request.user):
+            return redirect('msg_blocked')
+
         warehouse = Warehouse.objects.get(book=bid)
         warehouse.books_reserved -= 1
         warehouse.books_available += 1
@@ -259,6 +277,7 @@ class SearchResultsView(View):
     template = 'search_results.html'
     def get(self, request, *args, **kwargs):
         if request.GET['q']:
+
             k = int(request.GET['k'])
             s = int(request.GET['s'])
             cid = int(request.GET['cat'])
@@ -286,6 +305,9 @@ class SearchResultsView(View):
                 books = books.order_by('title')
             elif s == 2:
                 books = books.order_by('-title')
+        else:
+            return redirect('category_null')
+
         formdata = {
             'q' : request.GET['q'],
             'k' : k,

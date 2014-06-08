@@ -18,9 +18,15 @@
         </div>
         <div class="panel-body">
             <div class="col-md-4">
-                <a href="#" class="thumbnail">
+            {% if book.cover %}
+                <a href="{{ book.cover.url }}" class="thumbnail">
+                    <img src="{{ book.cover.url }}" alt="...">
+                </a>
+            {% else %}
+                 <a href="#" class="thumbnail">
                     <img src="{% static 'images/PlaceholderBook.png' %}" alt="...">
                 </a>
+            {% endif %}
                 {% if reservations %}
                     <a href="/unreserved/{{ book.id }}" class="btn btn-primary" type="button">Anuluj rezerwację</a>
                 {% else %}

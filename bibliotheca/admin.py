@@ -11,7 +11,7 @@ class NewsAdmin(admin.ModelAdmin):
 
 class BooksAdmin(admin.ModelAdmin):
     search_fields = ['title', 'original_title', 'ISBN', 'publisher__name', 'authors__last_name']
-    fields = ['title', 'original_title', 'publisher', 'category', 'authors', 'ISBN', 'published_date', 'number_of_pages', 'description']
+    fields = ['title', 'original_title', 'publisher', 'category', 'authors', 'ISBN', 'published_date', 'number_of_pages', 'description', 'cover']
     list_display = ['title', 'category', 'publisher', 'authors_all', 'ISBN']
 
     def authors_all(self, instance):
@@ -86,13 +86,12 @@ class ReadersInline(admin.StackedInline):
 
 class UserAdmin(OriginalUserAdmin):
     inlines = [ReadersInline]
-    list_display = ('username', 'email', 'first_name', 'last_name', 'address', 'is_blocked',)
+    list_display = ('username', 'email', 'first_name', 'last_name', 'address', 'is_blocked', 'is_active')
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         (('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
-        (('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'is_blocked', 'user_permissions')}),
+        (('Permissions'), {'fields': ('is_active', 'is_superuser')}),
         (('Important dates'), {'fields': ('last_login', 'date_joined')}),
-        (('Groups'), {'fields': ('groups',)}),
     )
 
     def address(self, instance):
@@ -112,6 +111,8 @@ class UserAdmin(OriginalUserAdmin):
         reader = Readers.objects.get(user=instance)
 
         return reader.is_blocked
+
+    is_blocked.boolean = True
     is_blocked.short_description = 'Czy zablokowany?'
 
 admin.site.unregister(User)

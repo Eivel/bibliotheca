@@ -16,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^register/$', views.UserRegister.as_view(), name='register'),
     url(r'^book/(?P<bid>[0-9]+)/$', views.BookView.as_view(), name='book'),
 
+    url(r'^category/$', views.CategoryView.as_view(), name='category_null'),
     url(r'^category/(?P<cid>[0-9]+)/$', views.CategoryView.as_view(), name='category'),
     url(r'^category/(?P<cid>[0-9]+)/(?P<page>[0-9]+)', views.CategoryView.as_view(), name='category_page'),
 
@@ -29,5 +30,8 @@ urlpatterns = patterns('',
     url(r'^reserved/(?P<bid>[0-9]+)/$', login_required(views.ReservedView.as_view(), login_url='/login/'), name='reserved'),
     url(r'^unreserved/(?P<bid>[0-9]+)/$', login_required(views.UnreservedView.as_view(), login_url='/login/'), name='unreserved'),
     url(r'^searchresults', views.SearchResultsView.as_view(), name='search_results'), #wersja robocza
+
+    url(r'^msg/blocked/$', views.MsgBlockedView.as_view(), name='msg_blocked'),
+
     url(r'^admin/', include(admin.site.urls)),
 )

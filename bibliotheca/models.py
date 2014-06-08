@@ -10,13 +10,13 @@ class Readers(models.Model):
         verbose_name_plural = 'Czytelnicy'
 
     user = models.OneToOneField(User)
-    address_street = models.CharField(max_length=255)
-    address_strno = models.IntegerField()
-    address_aptno = models.IntegerField(null=True, blank=True)
-    address_postcode = models.CharField(max_length=7)
-    address_city = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=12)
-    is_blocked = models.BooleanField(default=False)
+    address_street = models.CharField('Ulica', max_length=255)
+    address_strno = models.IntegerField('Nr domu')
+    address_aptno = models.IntegerField('Nr mieszkania', null=True, blank=True)
+    address_postcode = models.CharField('Kod pocztowy', max_length=7)
+    address_city = models.CharField('Miejscowość', max_length=255)
+    phone_number = models.CharField('Nr telefonu', max_length=12)
+    is_blocked = models.BooleanField('Zablokowany', default=False)
 
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name
@@ -76,6 +76,7 @@ class Books(models.Model):
     published_date = models.IntegerField('Rok wydania')
     number_of_pages = models.IntegerField('Liczba stron', null=True, blank=True)
     description = models.TextField('Opis', null=True, blank=True)
+    cover = models.ImageField('Okładka', upload_to='covers/', null=True, blank=True)
 
     def __str__(self):
         return self.title
