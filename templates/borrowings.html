@@ -6,9 +6,15 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="col-md-2">
-                        <a href="#" class="thumbnail">
+                    {% if reservation.book.cover %}
+                        <a href="{{ reservation.book.cover.url }}" class="thumbnail">
+                            <img src="{{ reservation.book.cover.url }}" alt="...">
+                        </a>
+                    {% else %}
+                         <a href="#" class="thumbnail">
                             <img src="{% static 'images/PlaceholderBook.png' %}" alt="...">
                         </a>
+                    {% endif %}
                     </div>
                     <div class="col-md-10">
                         <h4><a href="/book/{{ borrowings.book.id }}">{{ borrowings.book.title }}</a></h4>

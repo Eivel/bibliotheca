@@ -133,14 +133,36 @@ class BookView(View):
         book = Books.objects.get(id=bid)
 
         warehouse = Warehouse.objects.get(book=bid)
-
+        borrowed_reserved_number = 0
+        is_limit_reached = False
+        all_reservations = None
         reservations = None
+        borrowings = None
         if request.user.is_authenticated():
             user = request.user
             try:
                 reservations = Reservations.objects.get(book = bid, reader = user.readers)
             except Reservations.DoesNotExist:
                 reservations = None
+
+
+            try:
+                all_reservations = Reservations.objects.filter(reader = user.readers)
+            except Reservations.DoesNotExist:
+                all_reservations = None
+
+            try:
+                borrowings = Borrowings.objects.filter(reader = user.readers)
+            except Borrowings.DoesNotExist:
+                borrowings = None
+
+        if all_reservations:
+            borrowed_reserved_number += len(all_reservations)
+        if borrowings:
+            borrowed_reserved_number += len(borrowings)
+
+        if borrowed_reserved_number >= settings.BOOKS_LIMIT:
+            is_limit_reached = True
 
         breadcrumbs = []
         breadcrumbs.append(book)
@@ -155,7 +177,8 @@ class BookView(View):
             'book': book,
             'breadcrumbs': breadcrumbs,
             'reservations' : reservations,
-            'warehouse' : warehouse
+            'warehouse' : warehouse,
+            'is_limit_reached' : is_limit_reached
         }
         return render(request,self.template, context)
 
@@ -228,7 +251,7 @@ class ReservationsView(View):
             reservations = None
 
         context = {
-            'reservations' : reservations
+            'reservations' : reservations,
         }
         return render(request, self.template, context)
 

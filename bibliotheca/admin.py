@@ -37,7 +37,7 @@ class ReservationsAdmin(admin.ModelAdmin):
     actions = ['borrow', 'delete_reservations']
     def delete_reservations(self, request, queryset):
         for q in queryset:
-            warehouse = Warehouse.objects.get(book=q.book.book_id)
+            warehouse = Warehouse.objects.get(book=q.book)
             warehouse.books_reserved -= 1
             warehouse.books_available += 1
             warehouse.save()

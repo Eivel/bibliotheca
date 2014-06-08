@@ -122,6 +122,7 @@ EMAIL_HOST_PASSWORD = 'bibliotheca'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
 
+BOOKS_LIMIT = 2
 CRON_CLASSES = [
     "bibliotheca.cron.remindofBorrowings",
     # ...
