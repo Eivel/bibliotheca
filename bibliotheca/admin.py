@@ -66,16 +66,16 @@ class ReservationsAdmin(admin.ModelAdmin):
 class BorrowingsAdmin(admin.ModelAdmin):
     fields = ['reader', 'book', 'date_since', 'date_to']
     search_fields = ['reader__user__first_name', 'reader__user__last_name']
-    actions = ['borrow', 'delete_borrowings']
+    actions = ['delete_borrowings']
     def delete_borrowings(self, request, queryset):
         for q in queryset:
-            warehouse = Warehouse.objects.get(book=q.book.book_id)
+            warehouse = Warehouse.objects.get(book=q.book)
             warehouse.books_reserved -= 1
             warehouse.books_available += 1
             warehouse.save()
         queryset.delete()
         self.message_user(request, "Zaznaczone wypożyczenia zostały usunięte, a stan książek uaktualniony")
-    delete_borrowings.short_destription = "Bezpiecznie usuń zaznaczone wypożyczenia"
+    delete_borrowings.short_description = "Bezpiecznie usuń zaznaczone wypożyczenia"
 
 class WarehouseAdmin(admin.ModelAdmin):
     fields = ['book', 'books_quantity', 'books_available', 'books_reserved']

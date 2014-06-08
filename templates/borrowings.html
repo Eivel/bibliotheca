@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+    {% if borrowings %}
+        {% for borrowings in borrowings %}
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="col-md-2">
+                        <a href="#" class="thumbnail">
+                            <img src="{% static 'images/PlaceholderBook.png' %}" alt="...">
+                        </a>
+                    </div>
+                    <div class="col-md-10">
+                        <h4><a href="/book/{{ borrowings.book.id }}">{{ borrowings.book.title }}</a></h4>
+                        {% for author in borrowings.book.authors.all %}
+                            <a href="/author/{{ author.id }}">{{ author.name }} {{ author.last_name }}</a>{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                        <p>
+                            <a href="/publisher/{{ borrowings.book.publisher.id }}">{{ borrowings.book.publisher }}</a>, {{ borrowings.book.published_date }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    {% else %}
+        <h2>Brak wypożyczonych książek.</h2>
+    {% endif %}
+{% endblock %}

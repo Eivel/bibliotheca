@@ -26,6 +26,7 @@ urlpatterns = patterns('',
     url(r'^publisher/(?P<pid>[0-9]+)/$', views.PublisherView.as_view(), name='publisher'),
     url(r'^publisher/(?P<pid>[0-9]+)/(?P<page>[0-9]+)', views.PublisherView.as_view(), name='publisher_page'),
 
+    url(r'^borrowings$', login_required(views.BorrowingsView.as_view(), login_url='/login/'), name='borrowings'),
     url(r'^reservations$', login_required(views.ReservationsView.as_view(), login_url='/login/'), name='reservations'),
     url(r'^reserved/(?P<bid>[0-9]+)/$', login_required(views.ReservedView.as_view(), login_url='/login/'), name='reserved'),
     url(r'^unreserved/(?P<bid>[0-9]+)/$', login_required(views.UnreservedView.as_view(), login_url='/login/'), name='unreserved'),

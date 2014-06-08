@@ -200,6 +200,23 @@ class PublisherView(View):
         return render(request,self.template, context)
 
 
+class BorrowingsView(View):
+    template = 'borrowings.html'
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        try:
+            borrowings = Borrowings.objects.filter(reader = user.readers)
+        except Reservations.DoesNotExist:
+            borrowings = None
+
+        context = {
+            'borrowings' : borrowings
+        }
+        return render(request, self.template, context)
+
+
+
 class ReservationsView(View):
     template = 'reservations.html'
 

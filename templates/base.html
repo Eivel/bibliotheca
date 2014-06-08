@@ -36,6 +36,7 @@
                     <li><a href="/category/1">Katalog</a></li>
                     {% if not user.is_anonymous %}
                     <li><a href="/reservations">Rezerwacje</a></li>
+                    <li><a href="/borrowings">Wypożyczone książki</a></li>
                     {% endif %}
 					<li><a href="/contact">Kontakt</a></li>
                     {% if user.is_anonymous %}
