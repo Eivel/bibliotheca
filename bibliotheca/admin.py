@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as OriginalUserAdmin
 from bibliotheca.models import *
+from bibliotheca.forms import *
 import datetime
 # Register your models here.
 
@@ -73,13 +74,16 @@ class BorrowingsAdmin(admin.ModelAdmin):
             warehouse.books_reserved -= 1
             warehouse.books_available += 1
             warehouse.save()
-        queryset.delete()
+            q.delete()
+
         self.message_user(request, "Zaznaczone wypożyczenia zostały usunięte, a stan książek uaktualniony")
     delete_borrowings.short_description = "Bezpiecznie usuń zaznaczone wypożyczenia"
 
 class WarehouseAdmin(admin.ModelAdmin):
     fields = ['book', 'books_quantity', 'books_available', 'books_reserved']
+    readonly_fields = ['books_reserved']
     list_display = ('book', 'books_quantity', 'books_available', 'books_reserved')
+    form = WarehouseAdminForm
 
 class ReadersInline(admin.StackedInline):
     model = Readers

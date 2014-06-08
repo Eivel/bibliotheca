@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from bibliotheca.models import Readers, Reservations
+from bibliotheca.models import *
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
@@ -66,3 +66,23 @@ class UserCreateForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+class WarehouseAdminForm(forms.ModelForm):
+    class Meta:
+        model = Warehouse
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        b= cleaned_data.get('book')
+        bq = cleaned_data.get('books_quantity')
+        ba = cleaned_data.get('books_available')
+
+        try:
+            w = Warehouse.objects.get(book=b)
+            br = w.books_reserved
+            if bq != ba + br:
+                raise forms.ValidationError(u"Liczba wszystkich książek musi być równa sumie dostępnych i zarezerwowanych!")
+        except Warehouse.DoesNotExist:
+            pass
+
+        return cleaned_data
