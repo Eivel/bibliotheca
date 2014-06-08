@@ -5,6 +5,7 @@ import datetime
 # Register your models here.
 
 class NewsAdmin(admin.ModelAdmin):
+    actions = ['delete_selected']
     fields = ['title', 'creation_date', 'modification_date', 'text_body']
     search_fields = ['title', 'text_body']
 
@@ -29,10 +30,11 @@ class CategoriesAdmin(admin.ModelAdmin):
     fields = ['name', 'top_category']
     search_fields = ['name']
 
+
 class ReservationsAdmin(admin.ModelAdmin):
     fields = ['reader', 'book', 'reservation_date']
     search_fields = ['reader__user__first_name', 'reader__user__last_name']
-    actions = ['borrow', 'delete']
+    actions = ['borrow', 'delete_reservations']
     def delete_reservations(self, request, queryset):
         for q in queryset:
             warehouse = Warehouse.objects.get(book=q.book.book_id)
@@ -59,12 +61,12 @@ class ReservationsAdmin(admin.ModelAdmin):
             message_bit = "%s książek zostało" % rows_updated
             self.message_user(request, "%s wypożyczonych." % message_bit)
     borrow.short_description = "Wypożycz zaznaczone książki"
-    delete_reservations.short_destription = "Usuń zaznaczone rezerwacje"
+    delete_reservations.short_description = "Bezpiecznie usuń zaznaczone rezerwacje"
 
 class BorrowingsAdmin(admin.ModelAdmin):
     fields = ['reader', 'book', 'date_since', 'date_to']
     search_fields = ['reader__user__first_name', 'reader__user__last_name']
-    actions = ['borrow', 'delete']
+    actions = ['borrow', 'delete_borrowings']
     def delete_borrowings(self, request, queryset):
         for q in queryset:
             warehouse = Warehouse.objects.get(book=q.book.book_id)
@@ -73,10 +75,11 @@ class BorrowingsAdmin(admin.ModelAdmin):
             warehouse.save()
         queryset.delete()
         self.message_user(request, "Zaznaczone wypożyczenia zostały usunięte, a stan książek uaktualniony")
-    delete_borrowings.short_destription = "Usuń zaznaczone wypożyczenia"
+    delete_borrowings.short_destription = "Bezpiecznie usuń zaznaczone wypożyczenia"
 
 class WarehouseAdmin(admin.ModelAdmin):
     fields = ['book', 'books_quantity', 'books_available', 'books_reserved']
+    list_display = ('book', 'books_quantity', 'books_available', 'books_reserved')
 
 class ReadersInline(admin.StackedInline):
     model = Readers
@@ -122,3 +125,4 @@ admin.site.register(Categories,CategoriesAdmin)
 admin.site.register(Reservations,ReservationsAdmin)
 admin.site.register(Warehouse, WarehouseAdmin)
 admin.site.register(Borrowings, BorrowingsAdmin)
+admin.site.disable_action('delete_selected')
